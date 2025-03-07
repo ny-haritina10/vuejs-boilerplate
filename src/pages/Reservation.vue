@@ -25,10 +25,10 @@ export default {
     return {
       options: [],
       espaces: [],
-      isSubmitting: false, // Track submission state
+      isSubmitting: false,
       formFields: [
         { id: 'id_client', label: 'Client ID', type: 'number', required: true, placeholder: 'Enter Client ID' },
-        { id: 'espaces', label: 'Select your Espace', type: 'select', required: true, options: [] },
+        { id: 'espaces', label: 'Select your Espace', type: 'select', required: true, options: [] },        
         { id: 'date_reservation', label: 'Reservation Date', type: 'date', required: true },
         { id: 'hour_begin', label: 'Start Hour', type: 'number', required: true, placeholder: 'Enter Start Hour' },
         { id: 'duration', label: 'Duration (Hours)', type: 'number', required: true, placeholder: 'Enter Duration' },
@@ -102,24 +102,32 @@ export default {
         const response = await api.post('/front-office/reservations', payload);
         console.log('Response:', response.data);
         
-        // Success handling
+        // Success handling with notification instead of alert
+        this.$refs.reservationForm.showSuccessNotification(
+          'Your reservation has been successfully created!', 
+          'Reservation Successful'
+        );
+        
+        // Reset form data but keep notification visible
         setTimeout(() => {
-          alert('Reservation successful!');
-          // Reset form after the alert is closed
-          this.resetForm();
-        }, 100);
+          this.resetForm(false);
+        }, 500);
         
       } catch (error) {
         console.error('Error submitting reservation:', error);
         
+        // Extract error message
         const errorMsg = error.response?.data?.message || 'Failed to make reservation.';
         
-        setTimeout(() => {
-          alert(errorMsg);
-          // Reset submission state but keep form data for correction
-          this.$refs.reservationForm.resetSubmitting();
-          this.isSubmitting = false;
-        }, 100);
+        // Show error notification instead of alert
+        this.$refs.reservationForm.showErrorNotification(
+          errorMsg,
+          'Reservation Failed'
+        );
+        
+        // Reset submission state but keep form data for correction
+        this.$refs.reservationForm.resetSubmitting();
+        this.isSubmitting = false;
       }
     },
     
@@ -127,7 +135,7 @@ export default {
       this.resetForm();
     },
     
-    resetForm() {
+    resetForm(hideNotification = true) {
       // Reset local data
       this.initialData = {
         id_client: '',
@@ -140,7 +148,15 @@ export default {
       
       // Reset the form component state
       if (this.$refs.reservationForm) {
-        this.$refs.reservationForm.resetForm();
+        if (hideNotification) {
+          this.$refs.reservationForm.resetForm(); // Full reset including hiding notification
+        } else {
+          // Reset form data but keep notification visible
+          this.$refs.reservationForm.formData = { ...this.initialData };
+          this.$refs.reservationForm.errors = {};
+          this.$refs.reservationForm.isSubmitting = false;
+          this.$refs.reservationForm.files = {};
+        }
       }
       
       // Reset submission state

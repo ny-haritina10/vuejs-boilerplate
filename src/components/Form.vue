@@ -6,6 +6,18 @@
         <p v-if="subtitle" class="card-subtitle text-muted mt-1 mb-0">{{ subtitle }}</p>
       </div>
       <div class="card-body">
+        <!-- Notification component -->
+        <Notification
+          :show.sync="notification.show"
+          :type="notification.type"
+          :title="notification.title"
+          :message="notification.message"
+          :duration="notification.duration"
+          :dismissible="notification.dismissible"
+          @dismiss="onNotificationDismiss"
+          class="mb-4"
+        />
+        
         <form @submit.prevent="handleSubmit">
           <div class="row g-3">
             <div v-for="field in formFields" :key="field.id" 
@@ -16,6 +28,7 @@
                   <span v-if="field.required" class="text-danger">*</span>
                 </label>
                 
+                <!-- Form field types - unchanged from your original component -->
                 <!-- Text Input -->
                 <input 
                   v-if="field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number'"
@@ -148,11 +161,6 @@
               </div>
             </div>
           </div>
-          
-          <div v-if="errors.form" class="alert alert-danger mt-3">
-            {{ errors.form }}
-          </div>
-
 
           <div class="form-actions mt-4 d-flex" :class="actionAlignment">
             <button 
@@ -180,8 +188,13 @@
 </template>
 
 <script>
+import Notification from './Notification.vue';
+
 export default {
   name: 'Form',
+  components: {
+    Notification
+  },
   props: {
     title: {
       type: String,
@@ -222,7 +235,15 @@ export default {
       formData: { ...this.initialData },
       errors: {},
       isSubmitting: false,
-      files: {}
+      files: {},
+      notification: {
+        show: false,
+        type: 'info',
+        title: '',
+        message: '',
+        duration: 5000, // Auto-dismiss after 5 seconds by default
+        dismissible: true
+      }
     }
   },
   methods: {
@@ -230,23 +251,13 @@ export default {
       if (this.validateForm()) {
         this.isSubmitting = true;
         
-        const formData = { ...this.formData };
-        // Emit event and let parent handle the submission
+        const formData = { ...this.formData };        
         this.$emit('submit', formData);
-        // Don't reset isSubmitting here - parent will do that
       }
     },
-
-    // Add methods to control the submission state and reset the form
-    resetSubmitting() {
-      this.isSubmitting = false;
-    },
-
-    resetForm() {
-      this.formData = { ...this.initialData };
-      this.errors = {};
-      this.isSubmitting = false;
-      this.files = {};
+    handleCancel() {
+      this.hideNotification();
+      this.$emit('cancel');
     },
     validateForm() {
       this.errors = {};
@@ -320,6 +331,44 @@ export default {
     setError(field, message) {
       this.$set(this.errors, field, message);
       this.isSubmitting = false; 
+    },
+    showNotification(type, message, title = '', duration = 5000) {
+      this.notification = {
+        show: true,
+        type,
+        title,
+        message,
+        duration,
+        dismissible: true
+      };
+    },
+    hideNotification() {
+      this.notification.show = false;
+    },
+    onNotificationDismiss() {
+      // Optional: You can add any actions to perform when notification is dismissed
+    },
+    showSuccessNotification(message, title = 'Success') {
+      this.showNotification('success', message, title);
+    },
+    showErrorNotification(message, title = 'Error') {
+      this.showNotification('error', message, title);
+    },
+    showInfoNotification(message, title = 'Information') {
+      this.showNotification('info', message, title);
+    },
+    showWarningNotification(message, title = 'Warning') {
+      this.showNotification('warning', message, title);
+    },
+    resetSubmitting() {
+      this.isSubmitting = false;
+    },
+    resetForm() {
+      this.formData = { ...this.initialData };
+      this.errors = {};
+      this.isSubmitting = false;
+      this.files = {};
+      this.hideNotification();
     }
   }
 }
