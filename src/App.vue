@@ -13,7 +13,8 @@
       </div>
       
       <!-- CONTENT -->
-        <Reservation></Reservation>
+        <!-- <Reservation></Reservation> -->
+        <!-- <ReservationList></ReservationList> -->
       <!-- CONTENT -->
     </div>
   </Layout>
@@ -22,12 +23,14 @@
 <script>
 import Layout from './layouts/Layout.vue';
 import Reservation from './examples/Reservation.vue';
+import ReservationList from './examples/ReservationList.vue';
 
 export default {
   name: 'App',
   components: {
     Layout,
     Reservation,
+    ReservationList,
   }
 }
 </script>
