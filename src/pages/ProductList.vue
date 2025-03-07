@@ -11,7 +11,6 @@
       :itemsPerPage="5"
       @selection-change="onSelectionChange"
       @row-action="onRowAction"
-      @search="onSearch"
     >
       <template v-slot:rowActions="{ item }">
         <button class="btn btn-info btn-sm" @click="viewProductDetails(item)">
@@ -45,9 +44,9 @@ export default {
         { id: 7, name: 'Product 7', category: 'Category A', price: 40.0 }
       ],
       columns: [
-        { key: 'name', label: 'Product Name', sortable: true },
-        { key: 'category', label: 'Category', sortable: true },
-        { key: 'price', label: 'Price', sortable: true }
+        { key: 'name', label: 'Product Name' },
+        { key: 'category', label: 'Category' },
+        { key: 'price', label: 'Price' }
       ]
     };
   },
@@ -58,9 +57,6 @@ export default {
     onRowAction(actionData) {
       console.log('Row action:', actionData);
     },
-    onSearch(searchQuery) {
-      console.log('Search query:', searchQuery);
-    },
     viewProductDetails(product) {
       alert(`Viewing details for: ${product.name}`);
     },
@@ -70,5 +66,5 @@ export default {
       }
     }
   }
-}
+};
 </script>
