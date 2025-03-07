@@ -53,12 +53,13 @@
                   :class="{'is-invalid': errors[field.id]}"
                   :disabled="field.disabled"
                   :required="field.required"
+                  :multiple="field.multiple"
                 >
-                  <option value="" disabled selected>{{ field.placeholder }}</option>
+                  <option v-if="!field.multiple" value="" disabled>{{ field.placeholder || 'Select an option' }}</option>
                   <option 
                     v-for="option in field.options" 
-                    :key="option.value"
-                    :value="option.value"
+                    :key="option.value || option.id"
+                    :value="option.value || option.id"
                   >
                     {{ option.label }}
                   </option>
@@ -66,18 +67,24 @@
                 
                 <!-- Checkbox -->
                 <div v-else-if="field.type === 'checkbox'" class="form-check mt-2">
-                  <input 
-                    type="checkbox"
-                    :id="field.id"
-                    v-model="formData[field.id]"
-                    class="form-check-input"
-                    :class="{'is-invalid': errors[field.id]}"
-                    :disabled="field.disabled"
-                    :required="field.required"
+                  <div 
+                    v-for="option in field.options" 
+                    :key="option.value"
+                    class="form-check"
                   >
-                  <label class="form-check-label" :for="field.id">
-                    {{ field.checkboxLabel || field.label }}
-                  </label>
+                    <input 
+                      type="checkbox"
+                      :id="`${field.id}_${option.value}`"
+                      :value="option.value"
+                      v-model="formData[field.id]"
+                      class="form-check-input"
+                      :class="{'is-invalid': errors[field.id]}"
+                      :disabled="field.disabled"
+                    >
+                    <label class="form-check-label" :for="`${field.id}_${option.value}`">
+                      {{ option.label }}
+                    </label>
+                  </div>
                 </div>
                 
                 <!-- Radio Group -->
@@ -142,6 +149,11 @@
             </div>
           </div>
           
+          <div v-if="errors.form" class="alert alert-danger mt-3">
+            {{ errors.form }}
+          </div>
+
+
           <div class="form-actions mt-4 d-flex" :class="actionAlignment">
             <button 
               v-if="showCancelButton" 
@@ -169,7 +181,7 @@
 
 <script>
 export default {
-  name: 'AppForm',
+  name: 'Form',
   props: {
     title: {
       type: String,
@@ -218,23 +230,23 @@ export default {
       if (this.validateForm()) {
         this.isSubmitting = true;
         
-        // Create a copy of form data including files
-        const formData = {
-          ...this.formData,
-          files: this.files
-        };
-        
-        // Emit the form data
+        const formData = { ...this.formData };
+        // Emit event and let parent handle the submission
         this.$emit('submit', formData);
-        
-        // Simulate API call
-        setTimeout(() => {
-          this.isSubmitting = false;
-        }, 1000);
+        // Don't reset isSubmitting here - parent will do that
       }
     },
-    handleCancel() {
-      this.$emit('cancel');
+
+    // Add methods to control the submission state and reset the form
+    resetSubmitting() {
+      this.isSubmitting = false;
+    },
+
+    resetForm() {
+      this.formData = { ...this.initialData };
+      this.errors = {};
+      this.isSubmitting = false;
+      this.files = {};
     },
     validateForm() {
       this.errors = {};
@@ -304,6 +316,10 @@ export default {
     },
     getFieldColClass(field) {
       return field.colClass || 'col-md-12';
+    },
+    setError(field, message) {
+      this.$set(this.errors, field, message);
+      this.isSubmitting = false; 
     }
   }
 }

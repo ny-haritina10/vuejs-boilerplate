@@ -13,24 +13,21 @@
       </div>
       
       <!-- CONTENT -->
-        <!-- <UserRegistration></UserRegistration> -->
-        <ProductList></ProductList>
+        <Reservation></Reservation>
       <!-- CONTENT -->
     </div>
   </Layout>
 </template>
 
 <script>
-import UserRegistration from './pages/UserRegistration.vue';
-import ProductList from './pages/ProductList.vue';
 import Layout from './layouts/Layout.vue';
+import Reservation from './pages/Reservation.vue';
 
 export default {
   name: 'App',
   components: {
     Layout,
-    UserRegistration,
-    ProductList,
+    Reservation,
   }
 }
 </script>
