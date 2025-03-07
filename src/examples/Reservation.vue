@@ -63,7 +63,6 @@ export default {
     async fetchEspaces() {
       try {
         const response = await api.get('/test/espaces'); 
-        console.log('Espaces: ', response);
 
         if (response.data) {
           this.espaces = response.data.data.map(esp => ({ 
@@ -96,13 +95,10 @@ export default {
           duration: Number(formData.duration),
           options: Array.isArray(formData.options) ? [...formData.options] : []
         };
-        
-        console.log('Sending payload:', payload);
-        
+                
         const response = await api.post('/front-office/reservations', payload);
-        console.log('Response:', response.data);
-        
-        // Success handling with notification instead of alert
+
+        // show success notification
         this.$refs.reservationForm.showSuccessNotification(
           'Your reservation has been successfully created!', 
           'Reservation Successful'

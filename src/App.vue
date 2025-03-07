@@ -21,7 +21,7 @@
 
 <script>
 import Layout from './layouts/Layout.vue';
-import Reservation from './pages/Reservation.vue';
+import Reservation from './examples/Reservation.vue';
 
 export default {
   name: 'App',
