@@ -90,7 +90,8 @@ export default {
           submenu: [
             { name: 'Form', link: '/examples/static/form' },
             { name: 'List', link: '/examples/static/list' },
-            { name: 'List Reservation', link: '/examples/api/list-reservation' }
+            { name: 'List Reservation', link: '/examples/api/list-reservation' },
+            { name: 'Form Reservation', link: '/examples/api/form-reservation' }
           ]
         }
       ]

@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row align-items-center">
         <div class="col">
-          <p class="mb-0 text-muted">&copy; {{ currentYear }} Your Company. All rights reserved.</p>
+          <p class="mb-0 text-muted">&copy; {{ currentYear }} ETU-002716. All rights reserved.</p>
         </div>
         <div class="col-auto">
           <ul class="nav">

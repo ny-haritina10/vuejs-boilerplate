@@ -6,6 +6,7 @@ import Dashboard from '../pages/Dashboard.vue';
 import Login from '../components/auth/Login.vue';
 import Signup from '../components/auth/Signup.vue';
 import ReservationList from '../examples/api/ReservationList.vue';
+import Reservation from '../examples/api/Reservation.vue';
 
 const routes = [
   { 
@@ -46,6 +47,12 @@ const routes = [
     path: '/examples/api/list-reservation', 
     name: 'ReservationList', 
     component: ReservationList,
+    meta: { requiresAuth: true }
+  },
+  { 
+    path: '/examples/api/form-reservation', 
+    name: 'Reservation', 
+    component: Reservation,
     meta: { requiresAuth: true }
   },
 ];
