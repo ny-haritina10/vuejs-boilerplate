@@ -13,28 +13,27 @@
     <div class="sidebar-menu p-2">
       <ul class="nav flex-column">
         <li class="nav-item mb-2" v-for="(item, index) in menuItems" :key="index">
-          <a class="nav-link d-flex align-items-center text-white" :href="item.link">
+          <a 
+            class="nav-link d-flex align-items-center text-white" 
+            :href="item.link" 
+            @click.prevent="item.submenu ? toggleDropdown(index) : null"
+          >
             <i class="bi" :class="item.icon"></i>
             <span class="ms-2" v-if="!isCollapsed">{{ item.name }}</span>
+            <i 
+              v-if="item.submenu && !isCollapsed" 
+              class="bi ms-auto" 
+              :class="isDropdownOpen[index] ? 'bi-chevron-up' : 'bi-chevron-down'"
+            ></i>
           </a>
-        </li>
-        
-        <!-- Dropdown Example -->
-        <li class="nav-item mb-2">
-          <a class="nav-link d-flex align-items-center text-white" href="#" @click.prevent="toggleDropdown">
-            <i class="bi bi-gear"></i>
-            <span class="ms-2" v-if="!isCollapsed">Settings</span>
-            <i class="bi ms-auto" :class="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'" v-if="!isCollapsed"></i>
-          </a>
-          <ul v-if="isDropdownOpen && !isCollapsed" class="nav flex-column ps-3">
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Account</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-white" href="#">Security</a>
+          
+          <!-- Submenu (Dropdown) -->
+          <ul 
+            v-if="item.submenu && isDropdownOpen[index] && !isCollapsed" 
+            class="nav flex-column ps-3"
+          >
+            <li class="nav-item" v-for="(subItem, subIndex) in item.submenu" :key="subIndex">
+              <a class="nav-link text-white" :href="subItem.link">{{ subItem.name }}</a>
             </li>
           </ul>
         </li>
@@ -70,15 +69,31 @@ export default {
   data() {
     return {
       isCollapsed: false,
-      isDropdownOpen: false,
+      // Initialize isDropdownOpen with default false for each item with a submenu
+      isDropdownOpen: {},
       menuItems: [
         { name: 'Dashboard', icon: 'bi-speedometer2', link: '#' },
-        { name: 'Users', icon: 'bi-people-fill', link: '#' },
         { name: 'Products', icon: 'bi-box-seam', link: '#' },
-        { name: 'Orders', icon: 'bi-cart-check', link: '#' },
-        { name: 'Reports', icon: 'bi-graph-up', link: '#' }
+        { 
+          name: 'Settings', 
+          icon: 'bi-gear', 
+          link: '#', 
+          submenu: [
+            { name: 'Profile', link: '#' },
+            { name: 'Account', link: '#' },
+            { name: 'Security', link: '#' }
+          ]
+        }
       ]
     }
+  },
+  created() {
+    // Initialize isDropdownOpen for all menu items with submenus
+    this.menuItems.forEach((item, index) => {
+      if (item.submenu) {
+        this.isDropdownOpen[index] = false;
+      }
+    });
   },
   computed: {
     userInitials() {
@@ -94,8 +109,9 @@ export default {
       this.isCollapsed = !this.isCollapsed;
       this.$emit('sidebar-toggle', this.isCollapsed);
     },
-    toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen;
+    toggleDropdown(index) {
+      // Toggle the dropdown state for the specific index
+      this.isDropdownOpen[index] = !this.isDropdownOpen[index];
     }
   }
 }
