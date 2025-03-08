@@ -93,22 +93,26 @@
                 v-for="(item, index) in paginatedItems" 
                 :key="item.id || index"
               > 
-                <!-- Data Cells -->
                 <td 
                   v-for="column in columns" 
                   :key="column.key"
                   :class="column.cellClass"
                   class="px-4"
                 >
-                  <!-- Slot for custom cell rendering -->
                   <slot 
                     :name="`cell-${column.key}`" 
                     :item="item" 
                     :value="getCellValue(item, column.key)"
                   >
-                    <!-- Format Cell Value -->
+                    <!-- Apply formatter if provided, otherwise handle type-based formatting -->
                     <span v-if="column.formatter">
                       {{ column.formatter(getCellValue(item, column.key), item) }}
+                    </span>
+                    <span v-else-if="column.type === 'currency'">
+                      {{ formatNumber(getCellValue(item, column.key), { style: 'currency', currency: column.currency || 'USD' }) }}
+                    </span>
+                    <span v-else-if="column.type === 'number'">
+                      {{ formatNumber(getCellValue(item, column.key), { decimals: column.decimals || 2 }) }}
                     </span>
                     <span v-else>
                       {{ getCellValue(item, column.key) }}
@@ -335,8 +339,8 @@ export default {
       return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: options.decimals || 0,
         maximumFractionDigits: options.decimals || 2,
-        style: options.style || 'decimal', // 'decimal', 'currency', etc.
-        currency: options.currency || 'USD', // if style is 'currency'
+        style: options.style || 'decimal',
+        currency: options.currency || 'USD',
       }).format(value);
     },
     getCellValue(item, key) {
