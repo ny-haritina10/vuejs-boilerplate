@@ -1,8 +1,8 @@
 <template>
   <div>
     <List 
-      :title="'Reservation List'" 
-      :subtitle="'List of reservations for the client'"
+      title="Reservation List" 
+      subtitle="List of reservations for the client"
       :columns="columns"
       :items="reservations"
       :loading="loading"
@@ -34,8 +34,16 @@ export default {
         { key: 'hour_end', label: 'End' },
         { key: 'name_client', label: 'Client' },
         { key: 'options', label: 'Options' },
-        { key: 'duration', label: 'Duration (hours)' },
-        { key: 'reservation_amount', label: 'Amount' },
+        { 
+          key: 'duration', 
+          label: 'Duration (hours)', 
+          formatter: (value) => this.formatNumber(value, { decimals: 1 }) 
+        },
+        { 
+          key: 'reservation_amount', 
+          label: 'Amount', 
+          formatter: (value) => this.formatNumber(value, { style: 'currency', currency: 'MGA' }) 
+        },
         { key: 'status', label: 'Status' }
       ]
     };
@@ -56,6 +64,21 @@ export default {
         this.loading = false;
       }
     },
+    formatNumber(value, options = {}) {
+      if (value == null || isNaN(value)) return value;
+      return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: options.decimals || 0,
+        maximumFractionDigits: options.decimals || 2,
+        style: options.style || 'decimal',
+        currency: options.currency || 'USD',
+      }).format(value);
+    },
+    onSelectionChange(selected) {
+      console.log('Selected items:', selected);
+    },
+    onRowAction({ action, item }) {
+      console.log(`Action ${action} on item:`, item);
+    }
   }
 };
 </script>

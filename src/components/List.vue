@@ -330,6 +330,15 @@ export default {
     }
   },
   methods: {
+    formatNumber(value, options = {}) {
+      if (value == null || isNaN(value)) return value;
+      return new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: options.decimals || 0,
+        maximumFractionDigits: options.decimals || 2,
+        style: options.style || 'decimal', // 'decimal', 'currency', etc.
+        currency: options.currency || 'USD', // if style is 'currency'
+      }).format(value);
+    },
     getCellValue(item, key) {
       const keys = key.split('.');
       let value = item;
