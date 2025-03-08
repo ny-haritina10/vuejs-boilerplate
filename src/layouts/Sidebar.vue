@@ -83,17 +83,14 @@ export default {
       isDropdownOpen: {},
       menuItems: [
         { name: 'Dashboard', icon: 'bi-speedometer2', link: '/' },
-        { name: 'Users', icon: 'bi-people-fill', link: '/users' },
-        { name: 'Products', icon: 'bi-box-seam', link: '/products' },
-        { name: 'Orders', icon: 'bi-cart-check', link: '/orders' },
-        { name: 'Reports', icon: 'bi-graph-up', link: '/reports' },
         { 
           name: 'Examples', 
           icon: 'bi-gear', 
           link: '#', 
           submenu: [
             { name: 'Form', link: '/examples/static/form' },
-            { name: 'List', link: '/examples/static/list' }
+            { name: 'List', link: '/examples/static/list' },
+            { name: 'List Reservation', link: '/examples/api/list-reservation' }
           ]
         }
       ]
@@ -170,7 +167,6 @@ export default {
 .submenu {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
 }
 
 .submenu.is-open {

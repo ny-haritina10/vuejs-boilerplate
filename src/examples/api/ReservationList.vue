@@ -47,7 +47,7 @@ export default {
     async fetchReservations() {
       this.loading = true;
       try {
-        const clientId = 1; // placeholder
+        const clientId = 1; // hard-coded value 
         const response = await api.get(`/front-office/clients/${clientId}/reservations`);
         this.reservations = response.data.data;
       } catch (error) {
@@ -55,12 +55,6 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
-    onSelectionChange(selected) {
-      console.log('Selected items:', selected);
-    },
-    onRowAction({ action, item }) {
-      console.log(`Action ${action} on item:`, item);
     }
   }
 };

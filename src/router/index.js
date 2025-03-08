@@ -5,6 +5,7 @@ import ProductList from '../examples/static/ProductList.vue';
 import Dashboard from '../pages/Dashboard.vue';
 import Login from '../components/auth/Login.vue';
 import Signup from '../components/auth/Signup.vue';
+import ReservationList from '../examples/api/ReservationList.vue';
 
 const routes = [
   { 
@@ -18,6 +19,10 @@ const routes = [
   { 
     path: '/signup', 
     component: Signup 
+  },
+  { 
+    path: '/:pathMatch(.*)*', 
+    redirect: '/login'
   },
   { 
     path: '/dashboard', 
@@ -38,9 +43,11 @@ const routes = [
     meta: { requiresAuth: true }
   },
   { 
-    path: '/:pathMatch(.*)*', 
-    redirect: '/login'
-  }
+    path: '/examples/api/list-reservation', 
+    name: 'ReservationList', 
+    component: ReservationList,
+    meta: { requiresAuth: true }
+  },
 ];
 
 const requireAuth = (to, from, next) => {
