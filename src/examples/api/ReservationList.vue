@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import List from '../components/List.vue';
-import api from '../api/axiosInstance';
+import List from '../../components/List.vue';
+import api from '@/api/axiosInstance';
 
 export default {
   components: {

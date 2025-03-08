@@ -429,11 +429,6 @@ td {
   font-size: 0.875rem;
 }
 
-.sortable-column {
-  cursor: pointer;
-  user-select: none;
-}
-
 .empty-state {
   padding: 2rem 0;
   text-align: center;
