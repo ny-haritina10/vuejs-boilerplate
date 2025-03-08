@@ -13,10 +13,10 @@
     <div class="sidebar-menu p-2">
       <ul class="nav flex-column">
         <li class="nav-item mb-2" v-for="(item, index) in menuItems" :key="index">
-          <a 
+          <router-link 
             class="nav-link d-flex align-items-center text-white" 
-            :href="item.link" 
-            @click.prevent="item.submenu ? toggleDropdown(index) : null"
+            :to="item.link" 
+            @click="item.submenu ? toggleDropdown(index) : null"
           >
             <i class="bi" :class="item.icon"></i>
             <span class="ms-2" v-if="!isCollapsed">{{ item.name }}</span>
@@ -25,15 +25,16 @@
               class="bi ms-auto" 
               :class="isDropdownOpen[index] ? 'bi-chevron-up' : 'bi-chevron-down'"
             ></i>
-          </a>
+          </router-link>
           
-          <!-- Submenu (Dropdown) -->
+          <!-- Submenu (Dropdown) with smooth transition -->
           <ul 
-            v-if="item.submenu && isDropdownOpen[index] && !isCollapsed" 
-            class="nav flex-column ps-3"
+            v-if="item.submenu && !isCollapsed" 
+            class="nav flex-column ps-3 submenu"
+            :class="{ 'is-open': isDropdownOpen[index] }"
           >
             <li class="nav-item" v-for="(subItem, subIndex) in item.submenu" :key="subIndex">
-              <a class="nav-link text-white" :href="subItem.link">{{ subItem.name }}</a>
+              <router-link class="nav-link text-white" :to="subItem.link">{{ subItem.name }}</router-link>
             </li>
           </ul>
         </li>
@@ -69,26 +70,22 @@ export default {
   data() {
     return {
       isCollapsed: false,
-      // Initialize isDropdownOpen with default false for each item with a submenu
       isDropdownOpen: {},
       menuItems: [
-        { name: 'Dashboard', icon: 'bi-speedometer2', link: '#' },
-        { name: 'Products', icon: 'bi-box-seam', link: '#' },
+        { name: 'Dashboard', icon: 'bi-speedometer2', link: '/' },
         { 
-          name: 'Settings', 
+          name: 'Examples usage', 
           icon: 'bi-gear', 
           link: '#', 
           submenu: [
-            { name: 'Profile', link: '#' },
-            { name: 'Account', link: '#' },
-            { name: 'Security', link: '#' }
+            { name: 'Form', link: '/examples/static/form' },
+            { name: 'List', link: '/examples/static/list' }
           ]
         }
       ]
     }
   },
   created() {
-    // Initialize isDropdownOpen for all menu items with submenus
     this.menuItems.forEach((item, index) => {
       if (item.submenu) {
         this.isDropdownOpen[index] = false;
@@ -110,7 +107,6 @@ export default {
       this.$emit('sidebar-toggle', this.isCollapsed);
     },
     toggleDropdown(index) {
-      // Toggle the dropdown state for the specific index
       this.isDropdownOpen[index] = !this.isDropdownOpen[index];
     }
   }
@@ -156,5 +152,14 @@ export default {
 
 .sidebar-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+}
+
+.submenu.is-open {
+  max-height: 200px;
 }
 </style>

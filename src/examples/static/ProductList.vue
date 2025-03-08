@@ -6,9 +6,8 @@
       :columns="columns"
       :items="products"
       :loading="loading"
-      :selectable="true"
       :pagination="true"
-      :itemsPerPage="5"
+      :itemsPerPage="3"
       @selection-change="onSelectionChange"
       @row-action="onRowAction"
       @search="onSearch"
@@ -26,7 +25,7 @@
 </template>
 
 <script>
-import List from '../components/List.vue';
+import List from '../../components/List.vue';
 
 export default {
   components: {
@@ -45,9 +44,9 @@ export default {
         { id: 7, name: 'Product 7', category: 'Category A', price: 40.0 }
       ],
       columns: [
-        { key: 'name', label: 'Product Name', sortable: true },
-        { key: 'category', label: 'Category', sortable: true },
-        { key: 'price', label: 'Price', sortable: true }
+        { key: 'name', label: 'Product Name' },
+        { key: 'category', label: 'Category' },
+        { key: 'price', label: 'Price' }
       ]
     };
   },
