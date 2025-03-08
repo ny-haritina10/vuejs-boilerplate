@@ -1,19 +1,31 @@
 <template>
-  <Layout>
-    <div class="container-fluid">
-      <!-- Router View to display routed components -->
-      <router-view></router-view>
-    </div>
-  </Layout>
+  <component :is="layout">
+    <router-view></router-view>
+  </component>
 </template>
 
 <script>
-import Layout from './layouts/Layout.vue';
+import DefaultLayout from './layouts/DefaultLayout.vue';
+import AuthLayout from './layouts/AuthLayout.vue';
 
 export default {
   name: 'App',
   components: {
-    Layout
+    DefaultLayout,
+    AuthLayout
+  },
+  computed: {
+    layout() {
+      // Check the current route meta to determine which layout to use
+      const route = this.$route;
+      
+      // If the route is login or signup, use the AuthLayout
+      if (route.path === '/login' || route.path === '/signup') {
+        return 'AuthLayout';
+      }
+      // Otherwise use the default layout
+      return 'DefaultLayout';
+    }
   }
 };
 </script>

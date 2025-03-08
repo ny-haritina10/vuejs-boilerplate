@@ -27,7 +27,6 @@
             ></i>
           </router-link>
           
-          <!-- Submenu (Dropdown) with smooth transition -->
           <ul 
             v-if="item.submenu && !isCollapsed" 
             class="nav flex-column ps-3 submenu"
@@ -42,15 +41,26 @@
     </div>
     
     <div class="sidebar-footer mt-auto p-3" v-if="!isCollapsed">
-      <div class="user-info d-flex align-items-center">
-        <div class="avatar bg-primary rounded-circle d-flex align-items-center justify-content-center">
+      <div class="user-info d-flex align-items-center mb-3">
+        <div class="avatar bg-primary rounded-circle d-flex align-items-center justify-content-center me-2">
           <span>{{ userInitials }}</span>
         </div>
-        <div class="ms-2">
+        <div>
           <p class="mb-0 fw-bold">{{ user.name }}</p>
           <small>{{ user.role }}</small>
         </div>
       </div>
+      <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center" @click="logout">
+        <i class="bi bi-box-arrow-right me-2"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+
+    <!-- Collapsed state logout button -->
+    <div class="sidebar-footer p-2" v-else>
+      <button class="btn btn-danger btn-sm w-100" @click="logout" title="Logout">
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -73,8 +83,12 @@ export default {
       isDropdownOpen: {},
       menuItems: [
         { name: 'Dashboard', icon: 'bi-speedometer2', link: '/' },
+        { name: 'Users', icon: 'bi-people-fill', link: '/users' },
+        { name: 'Products', icon: 'bi-box-seam', link: '/products' },
+        { name: 'Orders', icon: 'bi-cart-check', link: '/orders' },
+        { name: 'Reports', icon: 'bi-graph-up', link: '/reports' },
         { 
-          name: 'Examples usage', 
+          name: 'Examples', 
           icon: 'bi-gear', 
           link: '#', 
           submenu: [
@@ -108,6 +122,10 @@ export default {
     },
     toggleDropdown(index) {
       this.isDropdownOpen[index] = !this.isDropdownOpen[index];
+    },
+    logout() {
+      localStorage.removeItem('isAuthenticated');
+      this.$router.push('/'); 
     }
   }
 }
@@ -120,6 +138,10 @@ export default {
   height: 100vh;
   width: 250px;
   transition: all 0.3s ease;
+  position: fixed; /* Keeps sidebar fixed on the left */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensures it stays above other content */
 }
 
 .sidebar.collapsed {
@@ -132,6 +154,7 @@ export default {
 
 .brand-name {
   font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .nav-link {
@@ -144,22 +167,58 @@ export default {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
-  color: white;
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.submenu.is-open {
+  max-height: 200px;
 }
 
 .sidebar-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.submenu {
-  max-height: 0;
-  overflow: hidden;
+.avatar {
+  width: 36px;
+  height: 36px;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
-.submenu.is-open {
-  max-height: 200px;
+/* Enhanced logout button styles */
+.btn-danger {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* Slightly darker red on hover */
+  transform: translateY(-1px); /* Subtle lift effect */
+}
+
+.btn-danger:active {
+  transform: translateY(0); /* Reset on click */
+}
+
+/* Adjustments for collapsed state */
+.sidebar.collapsed .sidebar-footer {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.sidebar.collapsed .btn-danger {
+  padding: 0.5rem;
+}
+
+/* Ensure sidebar-menu takes remaining space */
+.sidebar-menu {
+  flex-grow: 1;
+  overflow-y: auto; /* Allows scrolling if menu items exceed height */
 }
 </style>
