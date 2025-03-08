@@ -14,7 +14,7 @@
       
       <!-- CONTENT -->
         <!-- <Reservation></Reservation> -->
-        <!-- <ReservationList></ReservationList> -->
+        <ReservationList></ReservationList>
       <!-- CONTENT -->
     </div>
   </Layout>

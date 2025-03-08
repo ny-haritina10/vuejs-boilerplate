@@ -8,7 +8,7 @@
       :loading="loading"
       :selectable="true"
       :pagination="true"
-      :itemsPerPage="5"
+      :itemsPerPage="3"
       @selection-change="onSelectionChange"
       @row-action="onRowAction"
     >
@@ -29,11 +29,10 @@ export default {
       loading: false,
       reservations: [],
       columns: [
-        { key: 'id_reservation', label: 'Reservation ID' },
         { key: 'reservation_date', label: 'Date' },
-        { key: 'hour_begin', label: 'Start Time' },
-        { key: 'hour_end', label: 'End Time' },
-        { key: 'name_client', label: 'Client Name' },
+        { key: 'hour_begin', label: 'Start' },
+        { key: 'hour_end', label: 'End' },
+        { key: 'name_client', label: 'Client' },
         { key: 'options', label: 'Options' },
         { key: 'duration', label: 'Duration (hours)' },
         { key: 'reservation_amount', label: 'Amount' },
